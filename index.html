@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>西屯走讀課程地圖｜西屯國小 × 立賢教育基金會</title>
+<title>西屯走讀地圖大冒險！｜西屯國小 × 立賢教育基金會</title>
 <style>
   :root{
     --bg:#FAF6EC;
@@ -90,6 +90,12 @@
     box-shadow:var(--shadow);padding:18px;
   }
   .ripple-card svg{width:100%;height:auto;display:block;}
+  @keyframes orbit{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  @keyframes orbitR{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+  .rev{animation:orbit var(--d) linear infinite;transform-origin:300px 300px;}
+  .counter{animation:orbitR var(--d) linear infinite;}
+  .ripple-card svg:hover .rev,.ripple-card svg:hover .counter,
+  .ripple-card svg:focus-within .rev,.ripple-card svg:focus-within .counter{animation-play-state:paused;}
   .node{cursor:pointer;}
   .node circle.dot{stroke:var(--black);stroke-width:3;transition:transform .12s ease;}
   .node:hover circle.dot,.node:focus-visible circle.dot{transform:scale(1.18);transform-origin:center;transform-box:fill-box;}
@@ -156,6 +162,7 @@
 
   .panel{border:var(--bd);border-radius:16px;padding:18px 20px;background:var(--bg);}
   .panel h4{font-size:.95rem;font-weight:900;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .tag .ti{width:.95em;height:.95em;margin-right:5px;vertical-align:-0.14em;stroke-width:2;}
   .panel h4 .tag{font-size:.72rem;background:var(--black);color:#fff;border-radius:6px;padding:2px 8px;font-weight:800;}
   .lens-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
   .lens-chips span{
@@ -252,8 +259,8 @@
   <div class="hero">
     <div>
       <span class="pill">校本課程 ✦ 115 學年度</span>
-      <h1>從校園出發，<br>一年走得比一年遠——<br><span class="hl">西屯走讀課程地圖</span></h1>
-      <p class="lead">六個年級、六個地點、六句帶得走的理解。以 See &amp; Turn 為核心精神：看見西屯的人文與風土，轉化為理解、尊重與行動。</p>
+      <h1>從校園出發，<br>一年走得比一年遠——<br><span class="hl">西屯走讀地圖大冒險！</span></h1>
+      <p class="lead">以 See &amp; Turn 為核心精神：看見西屯的人文與風土，轉化為理解、尊重與行動。</p>
       <div class="seeturn">
         <span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/></svg> See 看見</span>
         <span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 8.5A9 9 0 0 0 4.6 7.2"/><path d="M4.5 3.5v4h4"/><path d="M3.5 15.5a9 9 0 0 0 15.9 1.3"/><path d="M19.5 20.5v-4h-4"/></svg> Turn 轉化</span>
@@ -264,56 +271,89 @@
 
     <!-- ============ RIPPLE MAP ============ -->
     <div class="ripple-card" id="ripple">
-      <svg viewBox="0 0 520 520" role="img" aria-label="走讀課程漣漪地圖：學習圈由校園逐年向外擴散">
-        <!-- ripples -->
-        <circle cx="260" cy="260" r="62"  fill="none" stroke="#111" stroke-width="3"/>
-        <circle cx="260" cy="260" r="118" fill="none" stroke="#111" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/>
-        <circle cx="260" cy="260" r="172" fill="none" stroke="#111" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/>
-        <circle cx="260" cy="260" r="226" fill="none" stroke="#111" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/>
-        <!-- center: school -->
+      <svg viewBox="0 0 600 600" role="img" aria-label="走讀課程行星圖：六個年級像行星繞著西屯國小運行，學習軌道一年比一年遠">
+        <!-- sparkles -->
+        <path transform="translate(70 90) scale(1)" d="M0 -8 L2 -2 L8 0 L2 2 L0 8 L-2 2 L-8 0 L-2 -2 Z" fill="#F8C84B" stroke="#111" stroke-width="1.5"/><path transform="translate(530 120) scale(0.8)" d="M0 -8 L2 -2 L8 0 L2 2 L0 8 L-2 2 L-8 0 L-2 -2 Z" fill="#ED5A7E" stroke="#111" stroke-width="1.5"/><path transform="translate(90 500) scale(0.9)" d="M0 -8 L2 -2 L8 0 L2 2 L0 8 L-2 2 L-8 0 L-2 -2 Z" fill="#17CE92" stroke="#111" stroke-width="1.5"/><path transform="translate(515 470) scale(1.1)" d="M0 -8 L2 -2 L8 0 L2 2 L0 8 L-2 2 L-8 0 L-2 -2 Z" fill="#F08A3C" stroke="#111" stroke-width="1.5"/>
+        <!-- orbits -->
+        <circle cx="300" cy="300" r="92"  fill="none" stroke="#111" stroke-width="2.5"/>
+        <circle cx="300" cy="300" r="146" fill="none" stroke="#111" stroke-width="2.5" stroke-dasharray="1 8" stroke-linecap="round"/>
+        <circle cx="300" cy="300" r="200" fill="none" stroke="#111" stroke-width="2.5"/>
+        <circle cx="300" cy="300" r="248" fill="none" stroke="#111" stroke-width="2.5" stroke-dasharray="1 8" stroke-linecap="round"/>
+        <!-- sun: 西屯國小 -->
         <g>
-          <circle cx="260" cy="260" r="40" fill="#F8C84B" stroke="#111" stroke-width="3"/>
-          <text x="260" y="254" text-anchor="middle" font-size="15" font-weight="900">西屯</text>
-          <text x="260" y="274" text-anchor="middle" font-size="15" font-weight="900">國小</text>
+          
+          <circle cx="300" cy="300" r="46" fill="#F8C84B" stroke="#111" stroke-width="3.5"/>
+          <text x="300" y="294" text-anchor="middle" font-size="16" font-weight="900">西屯</text>
+          <text x="300" y="316" text-anchor="middle" font-size="16" font-weight="900">國小</text>
         </g>
-        <!-- G1 校園 (inner ring) -->
-        <g class="node" data-target="grade-1" tabindex="0" role="link" aria-label="一年級：校園">
-          <circle class="dot" cx="260" cy="186" r="17" fill="#F8C84B"/>
-          <text x="260" y="192" text-anchor="middle" font-size="13" fill="#111">1</text>
-          <text x="260" y="160" text-anchor="middle" font-size="13">校園</text>
+        <!-- planets -->
+        <g transform="rotate(25 300 300)">
+          <g class="rev" style="--d:50s">
+            <g class="counter" style="--d:50s;transform-origin:300px 208px">
+              <g class="node" data-target="grade-1" tabindex="0" role="link" aria-label="一年級：校園" transform="rotate(-25 300 208)">
+                <circle class="dot" cx="300" cy="208" r="17" fill="#F8C84B"/>
+                <text x="300" y="213" text-anchor="middle" font-size="13" fill="#111">1</text>
+                <text class="lbl" x="300" y="246" text-anchor="middle" font-size="13">校園</text>
+              </g>
+            </g>
+          </g>
         </g>
-        <!-- G2 烈美堂 ring2 -->
-        <g class="node" data-target="grade-2" tabindex="0" role="link" aria-label="二年級：烈美堂">
-          <circle class="dot" cx="158" cy="200" r="17" fill="#F08A3C"/>
-          <text x="158" y="206" text-anchor="middle" font-size="13" fill="#111">2</text>
-          <text x="120" y="180" text-anchor="middle" font-size="13">烈美堂</text>
+        <g transform="rotate(295 300 300)">
+          <g class="rev" style="--d:75s">
+            <g class="counter" style="--d:75s;transform-origin:300px 154px">
+              <g class="node" data-target="grade-2" tabindex="0" role="link" aria-label="二年級：烈美堂" transform="rotate(-295 300 154)">
+                <circle class="dot" cx="300" cy="154" r="17" fill="#F08A3C"/>
+                <text x="300" y="159" text-anchor="middle" font-size="13" fill="#111">2</text>
+                <text class="lbl" x="300" y="192" text-anchor="middle" font-size="13">烈美堂</text>
+              </g>
+            </g>
+          </g>
         </g>
-        <!-- G3 西屯市場 ring2 right -->
-        <g class="node" data-target="grade-3" tabindex="0" role="link" aria-label="三年級：西屯市場">
-          <circle class="dot" cx="366" cy="216" r="17" fill="#17CE92"/>
-          <text x="366" y="222" text-anchor="middle" font-size="13" fill="#111">3</text>
-          <text x="412" y="198" text-anchor="middle" font-size="13">西屯市場</text>
+        <g transform="rotate(55 300 300)">
+          <g class="rev" style="--d:75s">
+            <g class="counter" style="--d:75s;transform-origin:300px 154px">
+              <g class="node" data-target="grade-3" tabindex="0" role="link" aria-label="三年級：西屯市場" transform="rotate(-55 300 154)">
+                <circle class="dot" cx="300" cy="154" r="17" fill="#17CE92"/>
+                <text x="300" y="159" text-anchor="middle" font-size="13" fill="#111">3</text>
+                <text class="lbl" x="300" y="192" text-anchor="middle" font-size="13">西屯市場</text>
+              </g>
+            </g>
+          </g>
         </g>
-        <!-- G4 八角穀倉 ring3 left -->
-        <g class="node" data-target="grade-4" tabindex="0" role="link" aria-label="四年級：八角穀倉">
-          <circle class="dot" cx="118" cy="338" r="17" fill="#8E6FC1"/>
-          <text x="118" y="344" text-anchor="middle" font-size="13" fill="#fff">4</text>
-          <text x="110" y="378" text-anchor="middle" font-size="13">八角穀倉</text>
+        <g transform="rotate(230 300 300)">
+          <g class="rev" style="--d:105s">
+            <g class="counter" style="--d:105s;transform-origin:300px 100px">
+              <g class="node" data-target="grade-4" tabindex="0" role="link" aria-label="四年級：八角穀倉" transform="rotate(-230 300 100)">
+                <circle class="dot" cx="300" cy="100" r="17" fill="#8E6FC1"/>
+                <text x="300" y="105" text-anchor="middle" font-size="13" fill="#fff">4</text>
+                <text class="lbl" x="300" y="138" text-anchor="middle" font-size="13">八角穀倉</text>
+              </g>
+            </g>
+          </g>
         </g>
-        <!-- G5 逢甲夜市 ring3 right -->
-        <g class="node" data-target="grade-5" tabindex="0" role="link" aria-label="五年級：逢甲夜市">
-          <circle class="dot" cx="404" cy="340" r="17" fill="#2E86AB"/>
-          <text x="404" y="346" text-anchor="middle" font-size="13" fill="#fff">5</text>
-          <text x="416" y="380" text-anchor="middle" font-size="13">逢甲夜市</text>
+        <g transform="rotate(130 300 300)">
+          <g class="rev" style="--d:105s">
+            <g class="counter" style="--d:105s;transform-origin:300px 100px">
+              <g class="node" data-target="grade-5" tabindex="0" role="link" aria-label="五年級：逢甲夜市" transform="rotate(-130 300 100)">
+                <circle class="dot" cx="300" cy="100" r="17" fill="#2E86AB"/>
+                <text x="300" y="105" text-anchor="middle" font-size="13" fill="#fff">5</text>
+                <text class="lbl" x="300" y="138" text-anchor="middle" font-size="13">逢甲夜市</text>
+              </g>
+            </g>
+          </g>
         </g>
-        <!-- G6 西屯老街 outer -->
-        <g class="node" data-target="grade-6" tabindex="0" role="link" aria-label="六年級：西屯老街">
-          <circle class="dot" cx="260" cy="486" r="17" fill="#ED5A7E"/>
-          <text x="260" y="492" text-anchor="middle" font-size="13" fill="#fff">6</text>
-          <text x="328" y="492" text-anchor="middle" font-size="13">西屯老街</text>
+        <g transform="rotate(180 300 300)">
+          <g class="rev" style="--d:140s">
+            <g class="counter" style="--d:140s;transform-origin:300px 52px">
+              <g class="node" data-target="grade-6" tabindex="0" role="link" aria-label="六年級：西屯老街" transform="rotate(-180 300 52)">
+                <circle class="dot" cx="300" cy="52" r="17" fill="#ED5A7E"/>
+                <text x="300" y="57" text-anchor="middle" font-size="13" fill="#fff">6</text>
+                <text class="lbl" x="300" y="90" text-anchor="middle" font-size="13">西屯老街</text>
+              </g>
+            </g>
+          </g>
         </g>
       </svg>
-      <p class="ripple-cap">學習圈像漣漪：一年級從校園出發，六年級走進老街提出地方創生提案。點選圓點直達該年級。</p>
     </div>
   </div>
 
@@ -353,18 +393,16 @@
         <span class="badge">一年級</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 校園</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 6 節</span>
-        <span class="badge status-draft">通則草稿・待共構</span>
       </div>
       <h3>走讀西屯：發現校園裡的故事</h3>
       <p class="meta t-only">領域：生活｜設計者：張百蕙</p>
       <div class="grade-grid">
         <div>
           <div class="panel">
-            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>透鏡</span>概念透鏡</h4>
             <div class="lens-chips"><span>故事</span><span>歸屬</span></div>
-            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6.5 6.5 0 0 0-3.8 11.8c.8.6 1.3 1.4 1.3 2.2h5c0-.8.5-1.6 1.3-2.2A6.5 6.5 0 0 0 12 3z"/><path d="M9.8 20h4.4M10.5 22.5h3"/></svg>通則</span>帶得走的理解</h4>
             <p><span class="gen">一個地方的物件承載著故事與記憶，認識它們讓我們產生歸屬感。</span></p>
-            <p class="gen-note t-only">＊草稿提煉自教案設計理念，待教師社群共構定稿。</p>
           </div>
           <div class="mission s-only">
             <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
@@ -372,7 +410,7 @@
           </div>
         </div>
         <div>
-          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel t-only fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="18" r="1.6" fill="currentColor" stroke="none"/><path d="M10 6h9M10 12h9M10 18h9"/></svg>節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="timeline">
               <li><span class="n">1</span><span><b>校園有故事</b>：繪本《開學了，學校也好緊張！》，想像「如果學校會說話」。</span></li>
               <li><span class="n">2</span><span><b>西屯小記者尋寶趣</b>：實地走訪四站地標，完成尋寶學習單。</span></li>
@@ -380,7 +418,7 @@
               <li><span class="n">5</span><span><b>西屯國小明信片</b>：畫下我最喜歡的西屯角落，寫給未來的朋友。</span></li>
             </ul>
           </details>
-          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8 8 0 0 1-8 8H5l-2 2.5v-6A8 8 0 1 1 21 11.5z"/><path d="M10.2 9.5a2.6 2.6 0 1 1 3.6 2.4c-.9.4-1.3 1-1.3 1.8"/><circle cx="12.4" cy="16.6" r="0.4" fill="currentColor" stroke="none"/></svg>提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="qs">
               <li><span class="qtag">事實</span><span>校園裡有哪些有故事的地方？它們在哪裡？</span></li>
               <li><span class="qtag">概念</span><span>如果老樹會說話，它看過什麼？為什麼這些物件留了下來？</span></li>
@@ -397,18 +435,16 @@
         <span class="badge">二年級</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 烈美堂</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 4 節</span>
-        <span class="badge status-draft">通則草稿・待共構</span>
       </div>
       <h3>守護的溫度：從烈美堂到我的家</h3>
       <p class="meta t-only">領域：生活／社會｜設計者：葉璦嘉</p>
       <div class="grade-grid">
         <div>
           <div class="panel">
-            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>透鏡</span>概念透鏡</h4>
             <div class="lens-chips"><span>守護</span><span>責任</span></div>
-            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6.5 6.5 0 0 0-3.8 11.8c.8.6 1.3 1.4 1.3 2.2h5c0-.8.5-1.6 1.3-2.2A6.5 6.5 0 0 0 12 3z"/><path d="M9.8 20h4.4M10.5 22.5h3"/></svg>通則</span>帶得走的理解</h4>
             <p><span class="gen">家因為有人持續地守護與付出而存在，每個人都能成為守護者。</span></p>
-            <p class="gen-note t-only">＊草稿提煉自家庭教育議題融入內涵，待教師社群共構定稿。</p>
           </div>
           <div class="mission s-only">
             <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
@@ -416,7 +452,7 @@
           </div>
         </div>
         <div>
-          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel t-only fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="18" r="1.6" fill="currentColor" stroke="none"/><path d="M10 6h9M10 12h9M10 18h9"/></svg>節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="timeline">
               <li><span class="n">1</span><span><b>老二媽的掛念</b>：繪本《萬和宮老二媽的故事》，理解「家」是情感連結的起點。</span></li>
               <li><span class="n">2</span><span><b>實地走讀烈美堂</b>：觀察紅磚、燕尾、堂號，思考是誰守護了兩百年。</span></li>
@@ -424,7 +460,7 @@
               <li><span class="n">4</span><span><b>守護者行動卡</b>：環境、安全、心情三類守護任務，許下約定帶回家實踐。</span></li>
             </ul>
           </details>
-          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8 8 0 0 1-8 8H5l-2 2.5v-6A8 8 0 1 1 21 11.5z"/><path d="M10.2 9.5a2.6 2.6 0 1 1 3.6 2.4c-.9.4-1.3 1-1.3 1.8"/><circle cx="12.4" cy="16.6" r="0.4" fill="currentColor" stroke="none"/></svg>提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="qs">
               <li><span class="qtag">事實</span><span>烈美堂有哪些古厝的特徵？它幾歲了？</span></li>
               <li><span class="qtag">概念</span><span>這棟房子兩百歲還這麼整齊，是誰在「守護」它？</span></li>
@@ -441,18 +477,16 @@
         <span class="badge">三年級</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 西屯市場（街仔尾）</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 6 節</span>
-        <span class="badge status-draft">通則草稿・待共構</span>
       </div>
       <h3>西屯市場時光收集卡</h3>
       <p class="meta t-only">領域：校本課程—西屯走讀｜設計者：胡桓睿｜社群計畫概念導向重構範例</p>
       <div class="grade-grid">
         <div>
           <div class="panel">
-            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>透鏡</span>概念透鏡</h4>
             <div class="lens-chips"><span>變遷</span><span>延續</span><span>連結</span></div>
-            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6.5 6.5 0 0 0-3.8 11.8c.8.6 1.3 1.4 1.3 2.2h5c0-.8.5-1.6 1.3-2.2A6.5 6.5 0 0 0 12 3z"/><path d="M9.8 20h4.4M10.5 22.5h3"/></svg>通則</span>帶得走的理解</h4>
             <p><span class="gen">隨著時代的變遷，傳統市場透過人情味與職人精神，延續在地文化，也連結了人與人的情感。</span></p>
-            <p class="gen-note t-only">＊第六節搭建鷹架，引導孩子用自己的話歸納表達。重構不更動六節架構，只調整每節的「提問」與「收束」。</p>
           </div>
           <div class="mission s-only">
             <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
@@ -460,7 +494,7 @@
           </div>
         </div>
         <div>
-          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel t-only fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="18" r="1.6" fill="currentColor" stroke="none"/><path d="M10 6h9M10 12h9M10 18h9"/></svg>節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="timeline">
               <li><span class="n">1</span><span><b>時光機</b>：概念提問開場——「市場和超市，差別只在賣的東西嗎？」</span></li>
               <li><span class="n">2</span><span><b>踏查（上）</b>：收集概念證據，訪談加入「您最捨不得這裡的什麼？」</span></li>
@@ -470,7 +504,7 @@
               <li><span class="n">6</span><span><b>策展發表</b>：通則歸納時刻，卡牌回饋市場完成遷移。</span></li>
             </ul>
           </details>
-          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8 8 0 0 1-8 8H5l-2 2.5v-6A8 8 0 1 1 21 11.5z"/><path d="M10.2 9.5a2.6 2.6 0 1 1 3.6 2.4c-.9.4-1.3 1-1.3 1.8"/><circle cx="12.4" cy="16.6" r="0.4" fill="currentColor" stroke="none"/></svg>提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="qs">
               <li><span class="qtag">事實</span><span>西屯市場在哪裡？這家攤位賣什麼、有什麼特色？</span></li>
               <li><span class="qtag">概念</span><span>同一家店，三個人的描繪有什麼不同？人與人的連結如何讓一個地方變得特別？</span></li>
@@ -487,18 +521,16 @@
         <span class="badge">四年級</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 八角穀倉</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 5 節</span>
-        <span class="badge status-draft">通則草稿・待共構</span>
       </div>
       <h3>西屯時光機：點亮八角穀倉</h3>
       <p class="meta t-only">領域：社會／藝術｜設計者：楊舜如｜採 4F 引導法（Facts／Feelings／Findings／Future）</p>
       <div class="grade-grid">
         <div>
           <div class="panel">
-            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>透鏡</span>概念透鏡</h4>
             <div class="lens-chips"><span>結構</span><span>價值</span><span>活化</span></div>
-            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6.5 6.5 0 0 0-3.8 11.8c.8.6 1.3 1.4 1.3 2.2h5c0-.8.5-1.6 1.3-2.2A6.5 6.5 0 0 0 12 3z"/><path d="M9.8 20h4.4M10.5 22.5h3"/></svg>通則</span>帶得走的理解</h4>
             <p><span class="gen">老建築蘊含先人的智慧，賦予新生命能讓文化價值延續到未來。</span></p>
-            <p class="gen-note t-only">＊草稿提煉自「老屋活化」價值思辨環節，待教師社群共構定稿。</p>
           </div>
           <div class="mission s-only">
             <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
@@ -506,7 +538,7 @@
           </div>
         </div>
         <div>
-          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel t-only fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="18" r="1.6" fill="currentColor" stroke="none"/><path d="M10 6h9M10 12h9M10 18h9"/></svg>節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="timeline">
               <li><span class="n">1</span><span><b>尋找八角形狀</b>（Facts）：實地踏查，觀察八角柱外觀、材質與二戰痕跡。</span></li>
               <li><span class="n">2</span><span><b>情感連結</b>（Feelings）：鳥瞰圖繪製，寫下對「穀倉爺爺」的一句話。</span></li>
@@ -515,7 +547,7 @@
               <li><span class="n">5</span><span><b>點亮未來（下）</b>：立體彩繪模型組裝、發表，回家邀請家人散步介紹。</span></li>
             </ul>
           </details>
-          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8 8 0 0 1-8 8H5l-2 2.5v-6A8 8 0 1 1 21 11.5z"/><path d="M10.2 9.5a2.6 2.6 0 1 1 3.6 2.4c-.9.4-1.3 1-1.3 1.8"/><circle cx="12.4" cy="16.6" r="0.4" fill="currentColor" stroke="none"/></svg>提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="qs">
               <li><span class="qtag">事實</span><span>八角穀倉長什麼樣子？以前是用來做什麼的？</span></li>
               <li><span class="qtag">概念</span><span>為什麼要蓋成八角形？老建築被保留下來的價值是什麼？</span></li>
@@ -532,18 +564,16 @@
         <span class="badge">五年級</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 逢甲夜市</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 8 節</span>
-        <span class="badge status-draft">通則草稿・待共構</span>
       </div>
       <h3>逢甲夜市走讀課程</h3>
       <p class="meta t-only">領域：彈性課程（校訂）｜設計者：盧耿逸｜前四節觀察記錄、後四節永續提案</p>
       <div class="grade-grid">
         <div>
           <div class="panel">
-            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>透鏡</span>概念透鏡</h4>
             <div class="lens-chips"><span>永續</span><span>公民參與</span></div>
-            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6.5 6.5 0 0 0-3.8 11.8c.8.6 1.3 1.4 1.3 2.2h5c0-.8.5-1.6 1.3-2.2A6.5 6.5 0 0 0 12 3z"/><path d="M9.8 20h4.4M10.5 22.5h3"/></svg>通則</span>帶得走的理解</h4>
             <p><span class="gen">地方的繁榮需要兼顧環境與經濟，每個人都能為社區的永續提出行動。</span></p>
-            <p class="gen-note t-only">＊草稿提煉自環境面與經濟面學習表現，本年級最需在工作坊中與老師共構。</p>
           </div>
           <div class="mission s-only">
             <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
@@ -551,7 +581,7 @@
           </div>
         </div>
         <div>
-          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel t-only fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="18" r="1.6" fill="currentColor" stroke="none"/><path d="M10 6h9M10 12h9M10 18h9"/></svg>節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="timeline">
               <li><span class="n">1</span><span><b>臺灣夜市文化</b>：認識夜市的文化與經濟意義（簡報＋小測驗）。</span></li>
               <li><span class="n">2</span><span><b>認識逢甲夜市</b>：歷史與重要性，建立觀察焦點。</span></li>
@@ -560,7 +590,7 @@
               <li><span class="n">8</span><span><b>成果發表</b>：分組簡報「改進計畫與特色營造」，互相回饋。</span></li>
             </ul>
           </details>
-          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8 8 0 0 1-8 8H5l-2 2.5v-6A8 8 0 1 1 21 11.5z"/><path d="M10.2 9.5a2.6 2.6 0 1 1 3.6 2.4c-.9.4-1.3 1-1.3 1.8"/><circle cx="12.4" cy="16.6" r="0.4" fill="currentColor" stroke="none"/></svg>提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="qs">
               <li><span class="qtag">事實</span><span>逢甲夜市有什麼特色？它對西屯有多重要？</span></li>
               <li><span class="qtag">概念</span><span>熱鬧的背後，環境與經濟之間有什麼拉扯？</span></li>
@@ -577,18 +607,16 @@
         <span class="badge">六年級</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 西屯老街</span>
         <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 8 節</span>
-        <span class="badge status-draft">通則草稿・待共構</span>
       </div>
       <h3>老街秘密研究社：西屯創生偵探隊</h3>
       <p class="meta t-only">領域：校本課程（社會）｜設計者：林郁軒｜方法論：鷹眼觀察（Fact／Reflective）＋羅盤思考</p>
       <div class="grade-grid">
         <div>
           <div class="panel">
-            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>透鏡</span>概念透鏡</h4>
             <div class="lens-chips"><span>證據</span><span>變遷</span><span>創生</span></div>
-            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <h4><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6.5 6.5 0 0 0-3.8 11.8c.8.6 1.3 1.4 1.3 2.2h5c0-.8.5-1.6 1.3-2.2A6.5 6.5 0 0 0 12 3z"/><path d="M9.8 20h4.4M10.5 22.5h3"/></svg>通則</span>帶得走的理解</h4>
             <p><span class="gen">透過證據與探究理解地方的變遷，我們能為土地的未來提出可行的主張。</span></p>
-            <p class="gen-note t-only">＊草稿以「探究方法」與「地方創生」雙線提煉，待教師社群共構定稿。</p>
           </div>
           <div class="mission s-only">
             <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
@@ -596,7 +624,7 @@
           </div>
         </div>
         <div>
-          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel t-only fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="6" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="5" cy="18" r="1.6" fill="currentColor" stroke="none"/><path d="M10 6h9M10 12h9M10 18h9"/></svg>節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="timeline">
               <li><span class="n">1</span><span><b>神秘委託信</b>：成立偵探隊、分配職務、示範鷹眼觀察法。</span></li>
               <li><span class="n">2</span><span><b>探究準備</b>：Google Map 規劃路線與觀察點，圈選候選深挖點。</span></li>
@@ -608,7 +636,7 @@
               <li><span class="n">8</span><span><b>提案發表會</b>：數位提案包＋兩分鐘 Pitch，票選最想支持的方案。</span></li>
             </ul>
           </details>
-          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <details class="panel fold"><summary><span class="tag"><svg class="ic ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8 8 0 0 1-8 8H5l-2 2.5v-6A8 8 0 1 1 21 11.5z"/><path d="M10.2 9.5a2.6 2.6 0 1 1 3.6 2.4c-.9.4-1.3 1-1.3 1.8"/><circle cx="12.4" cy="16.6" r="0.4" fill="currentColor" stroke="none"/></svg>提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
             <ul class="qs">
               <li><span class="qtag">事實</span><span>老街的今昔有什麼改變？我看見了哪些具體線索？</span></li>
               <li><span class="qtag">概念</span><span>什麼樣的證據才能支持一個說得通的主張？</span></li>
