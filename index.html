@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>115 西屯走讀課程｜教案地圖網站</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root{
+    --main: #2f6f4f;
+    --main-light: #eaf3ee;
+    --accent: #d98c3f;
+    --text: #2b2b2b;
+    --muted: #6b6b6b;
+    --border: #dde3df;
+  }
+  * { box-sizing: border-box; }
+  body{
+    margin:0;
+    font-family: "PingFang TC","Microsoft JhengHei","Helvetica Neue",Arial,sans-serif;
+    color: var(--text);
+    background: #faf9f6;
+  }
+  header{
+    background: var(--main);
+    color: #fff;
+    padding: 28px 24px 20px;
+    text-align:center;
+  }
+  header h1{ margin:0 0 6px; font-size: 1.6rem; letter-spacing: 1px; }
+  header p{ margin:0; opacity:.85; font-size:.9rem; }
+
+  nav.grade-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+    padding: 16px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    position: sticky;
+    top:0;
+    z-index: 50;
+  }
+  nav.grade-tabs button{
+    border:1px solid var(--main);
+    background:#fff;
+    color: var(--main);
+    padding:8px 18px;
+    border-radius: 999px;
+    font-size: .95rem;
+    cursor:pointer;
+    transition:.15s;
+  }
+  nav.grade-tabs button:hover{ background: var(--main-light); }
+  nav.grade-tabs button.active{
+    background: var(--main);
+    color:#fff;
+  }
+
+  main{ max-width: 1080px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  .grade-panel{ display:none; }
+  .grade-panel.active{ display:block; animation: fadeIn .25s ease; }
+  @keyframes fadeIn{ from{opacity:0; transform: translateY(6px);} to{opacity:1; transform:none;} }
+
+  section.block{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 22px;
+  }
+  section.block h2{
+    margin:0 0 14px;
+    font-size: 1.15rem;
+    color: var(--main);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  section.block h2 .tag{
+    font-size:.7rem;
+    background: var(--main-light);
+    color: var(--main);
+    padding:2px 10px;
+    border-radius: 999px;
+    font-weight:normal;
+  }
+
+  #map{ height: 360px; border-radius: 10px; border:1px solid var(--border); }
+  .map-note{ margin-top:10px; font-size:.82rem; color: var(--muted); }
+
+  .plan-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap:14px;
+  }
+  .plan-card{
+    background: var(--main-light);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .plan-card h3{ margin:0 0 6px; font-size:.95rem; color: var(--main); }
+  .plan-card p, .plan-card ul{ margin:0; font-size:.88rem; color: var(--text); line-height:1.6; }
+  .plan-card ul{ padding-left: 18px; }
+
+  .spot-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+    gap:16px;
+  }
+  .spot-card{
+    border:1px solid var(--border);
+    border-radius: 10px;
+    overflow:hidden;
+  }
+  .spot-card .spot-img{
+    height: 120px;
+    background: linear-gradient(135deg, var(--main-light), #fff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--main);
+    font-size:.8rem;
+  }
+  .spot-card .spot-body{ padding: 12px 14px; }
+  .spot-card h3{ margin:0 0 6px; font-size:.95rem; }
+  .spot-card p{ margin:0; font-size:.85rem; color: var(--muted); line-height:1.6; }
+  .spot-card .meta{
+    margin-top:8px;
+    font-size:.78rem;
+    color: var(--accent);
+  }
+
+  .placeholder-note{
+    font-size:.78rem;
+    color: var(--muted);
+    background: #fff8ef;
+    border:1px dashed #e0c9a6;
+    border-radius:8px;
+    padding:8px 12px;
+    margin-bottom:16px;
+  }
+
+  footer{
+    text-align:center;
+    font-size:.78rem;
+    color: var(--muted);
+    padding: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>115 西屯走讀課程｜走讀地圖教案網站</h1>
+  <p>立賢教育基金會課程發展　．　各年級走讀路線 × 教案 × 地點介紹</p>
+</header>
+
+<nav class="grade-tabs" id="gradeTabs"></nav>
+
+<main id="gradePanels"></main>
+
+<footer>
+  教案內容整理自基金會現有走讀教案文件；地圖座標依地點地址概略定位，建議帶班走讀前以 Google 地圖核對實際位置與路線。
+</footer>
+
+<script>
+/* ============================================================
+   資料區：之後只要替換這份資料，網站結構不需更動
+   每個年級包含：
+   - center / zoom：地圖初始位置
+   - route：走讀路線上的地點（含座標、介紹）
+   - plan：教案內容（主題、目標、流程、學習單）
+   ============================================================ */
+const GRADES = [
+  {
+    id: "g1",
+    label: "一年級",
+    theme: "認識校園周邊",
+    center: [24.1822, 120.6448],
+    zoom: 17,
+    plan: {
+      subject: "走讀西屯：發現校園裡的故事（共6節課）",
+      goals: [
+        "認識校園中的重要地標與特色角落，了解西屯國小的歷史與故事",
+        "依指示完成校園走讀、觀察記錄與創作，並能口語表達自己喜歡的角落",
+        "對西屯校園產生熟悉感與歸屬感，願意實踐愛護校園的行動"
+      ],
+      flow: [
+        "第一節｜校園有故事：繪本導讀，認識西屯國小的「生日」與代表性物件",
+        "第二節｜西屯小記者尋寶趣：走訪孔子像、百年樹人紀念碑、老樹、動物石像",
+        "第三節｜走進校史室：透過老照片比較今昔校園樣貌",
+        "第四節｜我最喜歡的西屯角落：分享喜愛的角落，發想想送給學校的新設計",
+        "第五節｜我是西屯小守護員：設計送給西屯國小的明信片正面",
+        "第六節｜寄給未來的西屯小朋友：寫下祝福並投入班級小郵筒"
+      ],
+      worksheet: "西屯小記者尋寶單、時光提問卡、西屯國小明信片"
+    },
+    route: [
+      { name: "孔子像", lat: 24.1823, lng: 120.6449, desc: "校園裡安靜的「老師」，提醒學生認真學習、尊敬師長、懂得禮貌。" },
+      { name: "動物石像", lat: 24.1821, lng: 120.6447, desc: "陪伴一代代學生玩耍、留下回憶的可愛角落，也提醒大家注意安全。" },
+      { name: "百年樹人紀念碑", lat: 24.1822, lng: 120.6450, desc: "像一本站立的故事書，紀念西屯國小走過的悠久歷史。" },
+      { name: "老樹", lat: 24.1824, lng: 120.6446, desc: "校園裡溫柔的長輩，看著一屆又一屆的孩子在樹蔭下長大。" },
+      { name: "校史室", lat: 24.1822, lng: 120.6448, desc: "收藏老照片與老物件的時光寶庫，帶學生看見學校過去的樣貌。" }
+    ],
+    locationNote: "走讀地點皆位於西屯國小校園內（台中市西屯區西屯路二段300號），座標為校園範圍內的概略位置，可依實際地標再校正。"
+  },
+  {
+    id: "g2",
+    label: "二年級",
+    theme: "古厝建築與家庭守護",
+    center: [24.1779, 120.6398],
+    zoom: 16,
+    plan: {
+      subject: "守護的溫度：從烈美堂到我的家",
+      goals: [
+        "透過《萬和宮老二媽的故事》繪本，理解「家」是情感連結的起點",
+        "實地走讀烈美堂，觀察並描述古厝建築特徵（如紅磚、燕尾、堂號）",
+        "覺察家人對自己的照顧（守護神），並具體執行家庭守護任務、表達感謝"
+      ],
+      flow: [
+        "第一節｜認識「家」與守護的意義：繪本導讀，引出「守護神」的概念",
+        "第二節｜走讀烈美堂：實地觀察兩百年古厝的紅磚、燕尾、堂號等特徵",
+        "第三節｜從古厝到我家：尋找並記錄家中默默守護自己的人",
+        "第四節｜接棒守護者：完成「愛的守護卡」，承諾執行家庭守護任務"
+      ],
+      worksheet: "烈美堂建築觀察單、愛的感謝卡"
+    },
+    route: [
+      { name: "烈美堂", lat: 24.1779, lng: 120.6398, desc: "已逾兩百年歷史的張廖家族祖厝，臺中市歷史建築，可觀察紅磚、燕尾脊與堂號等傳統建築特徵。地址：台中市西屯區烈美街62巷19號。" }
+    ],
+    locationNote: "座標依「烈美街62巷19號」概略定位，建議走讀前以 Google 地圖核對實際巷弄位置與集合動線。"
+  },
+  {
+    id: "g3",
+    label: "三年級",
+    theme: "傳統市場與社區生活",
+    center: [24.1828, 120.6458],
+    zoom: 16,
+    plan: {
+      subject: "西屯市場時光收集卡",
+      goals: [
+        "認識西屯市場（街仔尾）的發展歷史、地理空間方位與攤商職人特色",
+        "打開五感進行環境觀察，並對攤商進行有禮貌的訪談、錄製語音並轉成 QR Code",
+        "運用「寫實、特寫、印象」三種視角，將踏查的細節與感受轉化為繪畫作品並上台導覽"
+      ],
+      flow: [
+        "市場初探：認識街仔尾的歷史、方位與市場地圖",
+        "五感踏查：觀察攤位、訪談攤商並完成紀錄",
+        "數位紀錄：錄製訪談語音、製作專屬 QR Code",
+        "一店三畫風：以寫實、特寫、印象三種視角創作攤商畫作",
+        "成果發表會：口頭導覽創作理念，分享攤商的故事"
+      ],
+      worksheet: "市場踏查地圖、攤商訪談紀錄卡、一店三畫風創作學習單"
+    },
+    route: [
+      { name: "西屯市場（街仔尾）", lat: 24.1828, lng: 120.6458, desc: "西屯老聚落「街仔尾」所在地，現為居民日常採買的傳統市場，約有60個攤位。地址：台中市西屯區西屯路二段329號。" }
+    ],
+    locationNote: "座標依「西屯路二段329號」概略定位，市場內動線與重點攤位建議走讀前實地確認後再標註。"
+  },
+  {
+    id: "g4",
+    label: "四年級",
+    theme: "老建築的保存與創新",
+    center: [24.1800, 120.6425],
+    zoom: 15,
+    plan: {
+      subject: "西屯時光機：點亮八角穀倉／老二媽的家：守護西屯烈美堂",
+      goals: [
+        "辨識八角穀倉的幾何特徵與原始功能，說出八角形結構在建築上的科學巧思與保存價值",
+        "探討「建築新舊」與「歷史價值」的關係，理解烈美堂登錄為歷史建築的特殊性",
+        "區分烈美堂改建前（傳統合院、馬背）與改建後（RC結構、仿歇山頂）的特徵",
+        "結合紅磚燕尾、大漁池水紋等元素，動手創作立體模型與意象燈具"
+      ],
+      flow: [
+        "第一節｜建築年齡的大謎題：認識老建築的身世與「事實」線索",
+        "第二節｜不變的靈魂：探討烈美堂的保存價值與「感受」",
+        "第三節｜新與舊的變身術：比較烈美堂改建前後的建築特徵與「發現」",
+        "結構智慧與文化價值：認識八角穀倉的幾何結構與保存意義",
+        "動手創作：製作八角穀倉立體模型、紅磚燕尾與水紋意象燈具"
+      ],
+      worksheet: "八角穀倉學習單、烈美堂學習單"
+    },
+    route: [
+      { name: "八角穀倉", lat: 24.1819, lng: 120.6452, desc: "1967年由台灣省糧食局補助臺中市農會興建的稻種倉庫，八角形結構為臺中市歷史建築。地址：台中市西屯區西屯路二段307號。" },
+      { name: "烈美堂", lat: 24.1779, lng: 120.6398, desc: "張廖家族祖厝，可比較其改建前後的建築樣貌變化，認識歷史建築保存的意義。地址：台中市西屯區烈美街62巷19號。" }
+    ],
+    locationNote: "兩處座標分別依「西屯路二段307號」「烈美街62巷19號」概略定位，建議走讀前再以 Google 地圖核對精確位置。"
+  },
+  {
+    id: "g5",
+    label: "五年級",
+    theme: "商圈文化與行銷企劃",
+    center: [24.1809, 120.6457],
+    zoom: 16,
+    plan: {
+      subject: "逢甲夜市走讀課程（共8節課）",
+      goals: [
+        "認識台灣夜市文化與逢甲夜市的發展歷史、商圈分區",
+        "實地走讀逢甲商圈，完成觀察與訪談學習單，了解店家經營與顧客樣貌",
+        "分析商圈現況的優勢與待改進之處，提出特色營造與行銷企劃構想"
+      ],
+      flow: [
+        "第一節｜認識台灣夜市文化：從鼎邊趖等小吃認識夜市飲食特色",
+        "第二節｜逢甲夜市的歷史與商圈分區：認識發展脈絡與分區地圖",
+        "第三節｜延伸學習：以綠島旅遊計畫練習行程規劃的方法",
+        "第四節｜走讀前準備：擬定踏查路線與觀察重點",
+        "第五、六節｜實地走讀逢甲商圈：踏查、紀錄與店家訪談",
+        "第七節｜夜市新風貌：發想商圈改進與特色營造計畫",
+        "第八節｜成果統整與發表：分享走讀收穫與行銷企劃構想"
+      ],
+      worksheet: "逢甲夜市走讀學習單、改進計畫與特色營造學習單"
+    },
+    route: [
+      { name: "逢甲夜市／逢甲商圈", lat: 24.1809, lng: 120.6457, desc: "台中知名觀光夜市與商圈，可實地觀察店家經營型態、人潮動線與商圈分區特色。集中於文華路、逢甲路一帶。" }
+    ],
+    locationNote: "座標為逢甲商圈概略中心點，實際走讀路線建議依「逢甲商圈分區圖」「逢甲商圈參訪區域圖」（教案附件）再行細部標註。"
+  },
+  {
+    id: "g6",
+    label: "六年級",
+    theme: "地方創生與行動方案",
+    center: [24.1845, 120.6415],
+    zoom: 16,
+    plan: {
+      subject: "老街秘密研究社：西屯創生偵探隊",
+      goals: [
+        "運用「鷹眼」觀察法（事實／反思）辨識西屯老街的亮點與痛點",
+        "利用數位工具（Google 地圖／雲端文件）合作規劃踏查路線並紀錄",
+        "設計具邏輯性的訪談大綱，從中擷取具代表性的證據",
+        "結合踏查與訪談證據，運用「羅盤思考法」產出具可行性的地方創生提案"
+      ],
+      flow: [
+        "偵探隊集合：認識西屯老街（西大墩、街仔頭／街仔尾）的歷史脈絡",
+        "鷹眼踏查：分組記錄老街的亮點與痛點，標註於地圖",
+        "訪談行動：設計訪談大綱，採集居民與店家的故事與證據",
+        "羅盤思考：彙整踏查與訪談證據，討論並產出創生提案",
+        "成果發表：向班級或社區報告偵探隊的發現與行動建議"
+      ],
+      worksheet: "踏查路線紀錄表、訪談大綱與證據蒐集表、地方創生提案企劃書"
+    },
+    route: [
+      { name: "西屯老街（西大墩聚落）", lat: 24.1845, lng: 120.6415, desc: "張廖姓宗親早期聚落「西大墩」，西安里一帶仍保有「街仔頭」「街仔尾」等舊地名與生活紋理，是觀察老街變遷與發想創生提案的重要場域。" }
+    ],
+    locationNote: "座標依西安里、光明路一帶概略定位，建議走讀前先請學生以「鷹眼觀察法」實地確認踏查路線與重點站點。"
+  }
+];
+
+const tabsEl = document.getElementById("gradeTabs");
+const panelsEl = document.getElementById("gradePanels");
+const mapInstances = {};
+
+GRADES.forEach((grade, idx) => {
+  // 分頁按鈕
+  const btn = document.createElement("button");
+  btn.textContent = grade.label;
+  btn.dataset.target = grade.id;
+  if (idx === 0) btn.classList.add("active");
+  btn.addEventListener("click", () => switchGrade(grade.id));
+  tabsEl.appendChild(btn);
+
+  // 內容面板
+  const panel = document.createElement("div");
+  panel.className = "grade-panel" + (idx === 0 ? " active" : "");
+  panel.id = grade.id;
+  panel.innerHTML = `
+    <div class="placeholder-note">本年級主題：「${grade.theme}」。內容整理自基金會現有教案文件；地圖座標為依地址概略定位，正式使用前建議再以 Google 地圖核對精確位置。${grade.locationNote ? "　" + grade.locationNote : ""}</div>
+
+    <section class="block">
+      <h2>走讀路線地圖 <span class="tag">${grade.label}</span></h2>
+      <div id="map-${grade.id}" style="height:360px;border-radius:10px;border:1px solid var(--border);"></div>
+      <p class="map-note">點擊圖釘可查看地點簡介；座標為依地址概略定位，正式帶班走讀前請再實地核對路線。</p>
+    </section>
+
+    <section class="block">
+      <h2>教案文件 <span class="tag">${grade.label}</span></h2>
+      <div class="plan-grid">
+        <div class="plan-card">
+          <h3>單元主題</h3>
+          <p>${grade.plan.subject}</p>
+        </div>
+        <div class="plan-card">
+          <h3>教學目標</h3>
+          <ul>${grade.plan.goals.map(g => `<li>${g}</li>`).join("")}</ul>
+        </div>
+        <div class="plan-card">
+          <h3>教學流程</h3>
+          <ul>${grade.plan.flow.map(f => `<li>${f}</li>`).join("")}</ul>
+        </div>
+        <div class="plan-card">
+          <h3>學習單</h3>
+          <p>${grade.plan.worksheet}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>走讀地點介紹 <span class="tag">${grade.label}</span></h2>
+      <div class="spot-grid">
+        ${grade.route.map(spot => `
+          <div class="spot-card">
+            <div class="spot-img">${spot.name}</div>
+            <div class="spot-body">
+              <h3>${spot.name}</h3>
+              <p>${spot.desc}</p>
+              <div class="meta">座標：${spot.lat.toFixed(4)}, ${spot.lng.toFixed(4)}</div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </section>
+  `;
+  panelsEl.appendChild(panel);
+});
+
+function switchGrade(id) {
+  document.querySelectorAll(".grade-tabs button").forEach(b => {
+    b.classList.toggle("active", b.dataset.target === id);
+  });
+  document.querySelectorAll(".grade-panel").forEach(p => {
+    p.classList.toggle("active", p.id === id);
+  });
+  // 確保地圖在顯示時正確渲染尺寸
+  const grade = GRADES.find(g => g.id === id);
+  if (grade) initMap(grade);
+  setTimeout(() => {
+    if (mapInstances[id]) mapInstances[id].invalidateSize();
+  }, 80);
+}
+
+function initMap(grade) {
+  if (mapInstances[grade.id]) return;
+  const map = L.map(`map-${grade.id}`).setView(grade.center, grade.zoom);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap 貢獻者'
+  }).addTo(map);
+
+  grade.route.forEach((spot, i) => {
+    L.marker([spot.lat, spot.lng]).addTo(map)
+      .bindPopup(`<strong>${i + 1}. ${spot.name}</strong><br>${spot.desc}`);
+  });
+
+  // 以折線示意走讀路線
+  L.polyline(grade.route.map(s => [s.lat, s.lng]), { color: "#2f6f4f", weight: 3, dashArray: "6 6" }).addTo(map);
+
+  mapInstances[grade.id] = map;
+}
+
+// 初始化第一個年級的地圖
+initMap(GRADES[0]);
+</script>
+
+</body>
+</html>
