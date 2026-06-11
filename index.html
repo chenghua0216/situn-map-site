@@ -3,455 +3,648 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>115 西屯走讀課程｜教案地圖網站</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<title>西屯走讀課程地圖｜西屯國小 × 立賢教育基金會</title>
 <style>
   :root{
-    --main: #2f6f4f;
-    --main-light: #eaf3ee;
-    --accent: #d98c3f;
-    --text: #2b2b2b;
-    --muted: #6b6b6b;
-    --border: #dde3df;
+    --bg:#FAF6EC;
+    --ink:#1E2A3A;
+    --black:#111111;
+    --yellow:#F8C84B;
+    --orange:#F08A3C;
+    --green:#17CE92;
+    --blue:#2E86AB;
+    --pink:#ED5A7E;
+    --plum:#8E6FC1;
+    --cream-y:#FFF3D1;
+    --cream-o:#FFE5CF;
+    --cream-g:#D9F5EA;
+    --cream-b:#DCEDF7;
+    --cream-p:#FBDCE5;
+    --cream-pl:#EAE2F8;
+    --r:22px;
+    --bd:3px solid var(--black);
+    --shadow:6px 6px 0 var(--black);
+    --shadow-sm:4px 4px 0 var(--black);
   }
-  * { box-sizing: border-box; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  .ic{width:1.05em;height:1.05em;vertical-align:-0.18em;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;display:inline-block;}
+  html{scroll-behavior:smooth;}
   body{
-    margin:0;
-    font-family: "PingFang TC","Microsoft JhengHei","Helvetica Neue",Arial,sans-serif;
-    color: var(--text);
-    background: #faf9f6;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
   }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important;}
+    html{scroll-behavior:auto;}
+  }
+
+  /* ===== Header ===== */
   header{
-    background: var(--main);
-    color: #fff;
-    padding: 28px 24px 20px;
-    text-align:center;
+    position:sticky;top:0;z-index:50;
+    background:var(--bg);
+    border-bottom:4px solid var(--black);
+    padding:14px 28px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
   }
-  header h1{ margin:0 0 6px; font-size: 1.6rem; letter-spacing: 1px; }
-  header p{ margin:0; opacity:.85; font-size:.9rem; }
+  .brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:1.05rem;letter-spacing:.02em;}
+  .brand .bolt{width:26px;height:32px;flex:none;object-fit:contain;}
+  nav{display:flex;gap:22px;font-weight:700;font-size:.95rem;flex-wrap:wrap;}
+  nav a{color:var(--ink);text-decoration:none;padding:4px 2px;border-bottom:3px solid transparent;}
+  nav a:hover,nav a:focus-visible{border-bottom-color:var(--yellow);}
+  a:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:3px;}
 
-  nav.grade-tabs{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:8px;
-    padding: 16px;
-    background:#fff;
-    border-bottom:1px solid var(--border);
-    position: sticky;
-    top:0;
-    z-index: 50;
-  }
-  nav.grade-tabs button{
-    border:1px solid var(--main);
-    background:#fff;
-    color: var(--main);
-    padding:8px 18px;
-    border-radius: 999px;
-    font-size: .95rem;
-    cursor:pointer;
-    transition:.15s;
-  }
-  nav.grade-tabs button:hover{ background: var(--main-light); }
-  nav.grade-tabs button.active{
-    background: var(--main);
-    color:#fff;
-  }
+  .wrap{max-width:1140px;margin:0 auto;padding:0 24px;}
 
-  main{ max-width: 1080px; margin: 0 auto; padding: 24px 16px 60px; }
-
-  .grade-panel{ display:none; }
-  .grade-panel.active{ display:block; animation: fadeIn .25s ease; }
-  @keyframes fadeIn{ from{opacity:0; transform: translateY(6px);} to{opacity:1; transform:none;} }
-
-  section.block{
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 22px;
+  /* ===== Hero ===== */
+  .hero{padding:72px 0 56px;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    background:#fff;border:var(--bd);border-radius:999px;
+    padding:6px 16px;font-weight:800;font-size:.85rem;
+    box-shadow:3px 3px 0 var(--black);
   }
-  section.block h2{
-    margin:0 0 14px;
-    font-size: 1.15rem;
-    color: var(--main);
-    display:flex;
-    align-items:center;
-    gap:8px;
+  .hero h1{font-size:clamp(2rem,4.6vw,3.2rem);font-weight:900;line-height:1.25;margin:20px 0 18px;}
+  .hl{background:linear-gradient(transparent 62%,var(--yellow) 62%);}
+  .hero p.lead{font-size:1.05rem;max-width:34em;}
+  .cta{
+    display:inline-flex;align-items:center;gap:10px;margin-top:28px;
+    background:var(--black);color:#fff;border:var(--bd);border-radius:14px;
+    padding:14px 26px;font-weight:800;font-size:1rem;text-decoration:none;
+    box-shadow:var(--shadow-sm);transition:transform .12s ease,box-shadow .12s ease;
   }
-  section.block h2 .tag{
-    font-size:.7rem;
-    background: var(--main-light);
-    color: var(--main);
-    padding:2px 10px;
-    border-radius: 999px;
-    font-weight:normal;
+  .cta:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--black);}
+  .seeturn{
+    margin-top:26px;display:flex;gap:10px;flex-wrap:wrap;
+  }
+  .seeturn span{
+    background:#fff;border:var(--bd);border-radius:12px;padding:6px 14px;
+    font-weight:800;font-size:.85rem;box-shadow:3px 3px 0 var(--black);
   }
 
-  #map{ height: 360px; border-radius: 10px; border:1px solid var(--border); }
-  .map-note{ margin-top:10px; font-size:.82rem; color: var(--muted); }
+  /* ===== Ripple map ===== */
+  .ripple-card{
+    background:#fff;border:var(--bd);border-radius:var(--r);
+    box-shadow:var(--shadow);padding:18px;
+  }
+  .ripple-card svg{width:100%;height:auto;display:block;}
+  .node{cursor:pointer;}
+  .node circle.dot{stroke:var(--black);stroke-width:3;transition:transform .12s ease;}
+  .node:hover circle.dot,.node:focus-visible circle.dot{transform:scale(1.18);transform-origin:center;transform-box:fill-box;}
+  .node text{font-weight:800;fill:var(--ink);}
+  .ripple-cap{font-size:.82rem;font-weight:700;text-align:center;margin-top:10px;color:#5a6675;}
 
-  .plan-grid{
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
-    gap:14px;
-  }
-  .plan-card{
-    background: var(--main-light);
-    border-radius: 10px;
-    padding: 14px 16px;
-  }
-  .plan-card h3{ margin:0 0 6px; font-size:.95rem; color: var(--main); }
-  .plan-card p, .plan-card ul{ margin:0; font-size:.88rem; color: var(--text); line-height:1.6; }
-  .plan-card ul{ padding-left: 18px; }
+  /* ===== Section heading ===== */
+  section{padding:64px 0;}
+  .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+  .sec-head .blob{width:40px;height:40px;flex:none;}
+  .sec-head h2{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:900;}
+  .sec-sub{max-width:46em;margin-bottom:36px;color:#3c4a5c;}
 
-  .spot-grid{
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
-    gap:16px;
+  /* ===== View toggle ===== */
+  .toggle{
+    display:inline-flex;border:var(--bd);border-radius:999px;background:#fff;
+    box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:34px;
   }
-  .spot-card{
-    border:1px solid var(--border);
-    border-radius: 10px;
-    overflow:hidden;
+  .toggle button{
+    border:none;background:transparent;padding:10px 24px;
+    font-family:inherit;font-weight:800;font-size:.95rem;cursor:pointer;color:var(--ink);
   }
-  .spot-card .spot-img{
-    height: 120px;
-    background: linear-gradient(135deg, var(--main-light), #fff);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color: var(--main);
-    font-size:.8rem;
+  .toggle button.active{background:var(--black);color:#fff;}
+  body.mode-student .t-only{display:none!important;}
+  body.mode-teacher .s-only{display:none!important;}
+
+  /* ===== Concept axis ===== */
+  .axis{
+    display:grid;grid-template-columns:repeat(6,1fr);gap:14px;position:relative;
   }
-  .spot-card .spot-body{ padding: 12px 14px; }
-  .spot-card h3{ margin:0 0 6px; font-size:.95rem; }
-  .spot-card p{ margin:0; font-size:.85rem; color: var(--muted); line-height:1.6; }
-  .spot-card .meta{
-    margin-top:8px;
-    font-size:.78rem;
-    color: var(--accent);
+  .axis::before{
+    content:"";position:absolute;left:4%;right:4%;top:30px;height:4px;background:var(--black);z-index:0;
+  }
+  .axis a{
+    position:relative;z-index:1;text-decoration:none;color:var(--ink);
+    display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;
+  }
+  .axis .num{
+    width:60px;height:60px;border:var(--bd);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:1.1rem;box-shadow:3px 3px 0 var(--black);
+    transition:transform .12s ease;
+  }
+  .axis a:hover .num{transform:translate(-2px,-2px);}
+  .axis .lens{font-weight:800;font-size:.85rem;line-height:1.45;}
+  .axis .loc{font-size:.78rem;color:#5a6675;font-weight:700;}
+
+  /* ===== Grade cards ===== */
+  .grade{
+    border:var(--bd);border-radius:var(--r);box-shadow:var(--shadow);
+    padding:30px 32px;margin-bottom:36px;background:#fff;
+  }
+  .grade-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+  .badge{
+    background:var(--black);color:#fff;border-radius:999px;
+    padding:5px 16px;font-weight:800;font-size:.85rem;
+  }
+  .badge.ghost{background:#fff;color:var(--ink);border:var(--bd);box-shadow:2px 2px 0 var(--black);}
+  .badge.status-done{background:var(--green);color:var(--black);border:var(--bd);box-shadow:2px 2px 0 var(--black);}
+  .badge.status-draft{background:var(--yellow);color:var(--black);border:var(--bd);box-shadow:2px 2px 0 var(--black);}
+  .grade h3{font-size:1.5rem;font-weight:900;margin:6px 0 4px;}
+  .grade .meta{font-size:.85rem;font-weight:700;color:#5a6675;margin-bottom:18px;}
+  .grade-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;}
+
+  .panel{border:var(--bd);border-radius:16px;padding:18px 20px;background:var(--bg);}
+  .panel h4{font-size:.95rem;font-weight:900;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .panel h4 .tag{font-size:.72rem;background:var(--black);color:#fff;border-radius:6px;padding:2px 8px;font-weight:800;}
+  .lens-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .lens-chips span{
+    background:#fff;border:var(--bd);border-radius:10px;padding:4px 12px;
+    font-weight:800;font-size:.85rem;box-shadow:2px 2px 0 var(--black);
+  }
+  .gen{
+    font-weight:800;line-height:1.8;font-size:.98rem;
+    background:linear-gradient(transparent 70%,rgba(248,200,75,.85) 70%);
+    display:inline;
+  }
+  .gen-note{font-size:.78rem;color:#5a6675;font-weight:700;margin-top:10px;}
+
+  .timeline{list-style:none;}
+  .timeline li{
+    display:flex;gap:12px;align-items:flex-start;padding:7px 0;font-size:.92rem;
+  }
+  .timeline .n{
+    flex:none;width:30px;height:30px;border:var(--bd);border-radius:50%;
+    background:#fff;display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:.8rem;margin-top:2px;
+  }
+  .timeline b{font-weight:800;}
+  .timeline .desc{color:#3c4a5c;}
+
+  .qs{list-style:none;display:flex;flex-direction:column;gap:10px;}
+  .qs li{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;}
+  .qs .qtag{
+    flex:none;border:var(--bd);border-radius:8px;padding:2px 10px;
+    font-weight:900;font-size:.74rem;margin-top:3px;background:#fff;box-shadow:2px 2px 0 var(--black);
   }
 
-  .placeholder-note{
-    font-size:.78rem;
-    color: var(--muted);
-    background: #fff8ef;
-    border:1px dashed #e0c9a6;
-    border-radius:8px;
-    padding:8px 12px;
-    margin-bottom:16px;
+  .mission{
+    border:var(--bd);border-radius:16px;padding:18px 20px;background:#fff;margin-top:18px;
   }
+  .mission h4{font-size:.95rem;font-weight:900;margin-bottom:8px;}
+  .mission p{font-size:.92rem;}
 
+
+  .grade-grid .panel + .panel{margin-top:28px;}
+  details.fold summary{
+    cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;
+    font-size:.95rem;font-weight:900;user-select:none;
+  }
+  details.fold summary::-webkit-details-marker{display:none;}
+  details.fold summary .tag{font-size:.72rem;background:var(--black);color:#fff;border-radius:6px;padding:2px 8px;font-weight:800;}
+  details.fold .chev{margin-left:auto;transition:transform .15s ease;}
+  details.fold[open] .chev{transform:rotate(180deg);}
+  details.fold[open] summary{margin-bottom:12px;}
+  details.fold summary:hover{opacity:.75;}
+
+  /* grade theme colors */
+  .g1{background:var(--cream-y);}  .g1 .num,.g1-dot{background:var(--yellow);}
+  .g2{background:var(--cream-o);}  .g2 .num,.g2-dot{background:var(--orange);}
+  .g3{background:var(--cream-g);}  .g3 .num,.g3-dot{background:var(--green);}
+  .g4{background:var(--cream-pl);} .g4 .num,.g4-dot{background:var(--plum);}
+  .g5{background:var(--cream-b);}  .g5 .num,.g5-dot{background:var(--blue);}
+  .g6{background:var(--cream-p);}  .g6 .num,.g6-dot{background:var(--pink);}
+
+  /* ===== Footer ===== */
   footer{
-    text-align:center;
-    font-size:.78rem;
-    color: var(--muted);
-    padding: 20px;
+    border-top:4px solid var(--black);padding:34px 24px;text-align:center;
+    font-weight:700;font-size:.9rem;color:#3c4a5c;
+  }
+  footer .belief{font-weight:900;font-size:1.05rem;color:var(--ink);margin-bottom:6px;}
+
+  /* ===== Responsive ===== */
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr;padding-top:48px;}
+    .grade-grid{grid-template-columns:1fr;}
+    .axis{grid-template-columns:repeat(3,1fr);gap:24px;}
+    .axis::before{display:none;}
+    nav{display:none;}
   }
 </style>
 </head>
-<body>
+<body class="mode-teacher">
 
 <header>
-  <h1>115 西屯走讀課程｜走讀地圖教案網站</h1>
-  <p>立賢教育基金會課程發展　．　各年級走讀路線 × 教案 × 地點介紹</p>
+  <div class="brand">
+    <img class="bolt" src="https://github.com/chenghua0216/figures/blob/main/TheShiner.png?raw=true" alt="The Shiner logo">
+    西屯國小 × 立賢｜西屯走讀課程地圖
+  </div>
+  <nav aria-label="頁面導覽">
+    <a href="#ripple">漣漪地圖</a>
+    <a href="#axis">概念軸線</a>
+    <a href="#grades">各年級課程</a>
+  </nav>
 </header>
 
-<nav class="grade-tabs" id="gradeTabs"></nav>
+<main class="wrap">
 
-<main id="gradePanels"></main>
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div>
+      <span class="pill">校本課程 ✦ 115 學年度</span>
+      <h1>從校園出發，<br>一年走得比一年遠——<br><span class="hl">西屯走讀課程地圖</span></h1>
+      <p class="lead">六個年級、六個地點、六句帶得走的理解。以 See &amp; Turn 為核心精神：看見西屯的人文與風土，轉化為理解、尊重與行動。</p>
+      <div class="seeturn">
+        <span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/></svg> See 看見</span>
+        <span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 8.5A9 9 0 0 0 4.6 7.2"/><path d="M4.5 3.5v4h4"/><path d="M3.5 15.5a9 9 0 0 0 15.9 1.3"/><path d="M19.5 20.5v-4h-4"/></svg> Turn 轉化</span>
+        <span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="9" width="17" height="11.5" rx="1.5"/><path d="M3.5 13h17M12 9v11.5"/><path d="M12 9c-4.5 0-5.8-5-2.8-5C11 4 12 7 12 9zm0 0c4.5 0 5.8-5 2.8-5C13 4 12 7 12 9z"/></svg> 帶得走的通則</span>
+      </div>
+      <a class="cta" href="#grades">開始探索 →</a>
+    </div>
+
+    <!-- ============ RIPPLE MAP ============ -->
+    <div class="ripple-card" id="ripple">
+      <svg viewBox="0 0 520 520" role="img" aria-label="走讀課程漣漪地圖：學習圈由校園逐年向外擴散">
+        <!-- ripples -->
+        <circle cx="260" cy="260" r="62"  fill="none" stroke="#111" stroke-width="3"/>
+        <circle cx="260" cy="260" r="118" fill="none" stroke="#111" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/>
+        <circle cx="260" cy="260" r="172" fill="none" stroke="#111" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/>
+        <circle cx="260" cy="260" r="226" fill="none" stroke="#111" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/>
+        <!-- center: school -->
+        <g>
+          <circle cx="260" cy="260" r="40" fill="#F8C84B" stroke="#111" stroke-width="3"/>
+          <text x="260" y="254" text-anchor="middle" font-size="15" font-weight="900">西屯</text>
+          <text x="260" y="274" text-anchor="middle" font-size="15" font-weight="900">國小</text>
+        </g>
+        <!-- G1 校園 (inner ring) -->
+        <g class="node" data-target="grade-1" tabindex="0" role="link" aria-label="一年級：校園">
+          <circle class="dot" cx="260" cy="186" r="17" fill="#F8C84B"/>
+          <text x="260" y="192" text-anchor="middle" font-size="13" fill="#111">1</text>
+          <text x="260" y="160" text-anchor="middle" font-size="13">校園</text>
+        </g>
+        <!-- G2 烈美堂 ring2 -->
+        <g class="node" data-target="grade-2" tabindex="0" role="link" aria-label="二年級：烈美堂">
+          <circle class="dot" cx="158" cy="200" r="17" fill="#F08A3C"/>
+          <text x="158" y="206" text-anchor="middle" font-size="13" fill="#111">2</text>
+          <text x="120" y="180" text-anchor="middle" font-size="13">烈美堂</text>
+        </g>
+        <!-- G3 西屯市場 ring2 right -->
+        <g class="node" data-target="grade-3" tabindex="0" role="link" aria-label="三年級：西屯市場">
+          <circle class="dot" cx="366" cy="216" r="17" fill="#17CE92"/>
+          <text x="366" y="222" text-anchor="middle" font-size="13" fill="#111">3</text>
+          <text x="412" y="198" text-anchor="middle" font-size="13">西屯市場</text>
+        </g>
+        <!-- G4 八角穀倉 ring3 left -->
+        <g class="node" data-target="grade-4" tabindex="0" role="link" aria-label="四年級：八角穀倉">
+          <circle class="dot" cx="118" cy="338" r="17" fill="#8E6FC1"/>
+          <text x="118" y="344" text-anchor="middle" font-size="13" fill="#fff">4</text>
+          <text x="110" y="378" text-anchor="middle" font-size="13">八角穀倉</text>
+        </g>
+        <!-- G5 逢甲夜市 ring3 right -->
+        <g class="node" data-target="grade-5" tabindex="0" role="link" aria-label="五年級：逢甲夜市">
+          <circle class="dot" cx="404" cy="340" r="17" fill="#2E86AB"/>
+          <text x="404" y="346" text-anchor="middle" font-size="13" fill="#fff">5</text>
+          <text x="416" y="380" text-anchor="middle" font-size="13">逢甲夜市</text>
+        </g>
+        <!-- G6 西屯老街 outer -->
+        <g class="node" data-target="grade-6" tabindex="0" role="link" aria-label="六年級：西屯老街">
+          <circle class="dot" cx="260" cy="486" r="17" fill="#ED5A7E"/>
+          <text x="260" y="492" text-anchor="middle" font-size="13" fill="#fff">6</text>
+          <text x="328" y="492" text-anchor="middle" font-size="13">西屯老街</text>
+        </g>
+      </svg>
+      <p class="ripple-cap">學習圈像漣漪：一年級從校園出發，六年級走進老街提出地方創生提案。點選圓點直達該年級。</p>
+    </div>
+  </div>
+
+  <!-- ============ CONCEPT AXIS ============ -->
+  <section id="axis">
+    <div class="sec-head">
+      <svg class="blob" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 26c-4-8 2-18 12-18s16 8 12 18-20 10-24 0z" fill="#F08A3C" stroke="#111" stroke-width="2.5"/></svg>
+      <h2>概念軸線：六年的成長路徑</h2>
+    </div>
+    <p class="sec-sub">每個年級用一組「概念透鏡」觀看西屯。從「故事」開始，到「創生」收尾——概念逐年加深，孩子的世界逐年擴大。</p>
+    <div class="axis">
+      <a href="#grade-1"><span class="num g1">一</span><span class="lens">故事・歸屬</span><span class="loc">校園</span></a>
+      <a href="#grade-2"><span class="num g2">二</span><span class="lens">守護・責任</span><span class="loc">烈美堂</span></a>
+      <a href="#grade-3"><span class="num g3">三</span><span class="lens">變遷・延續・連結</span><span class="loc">西屯市場</span></a>
+      <a href="#grade-4"><span class="num g4">四</span><span class="lens">結構・價值・活化</span><span class="loc">八角穀倉</span></a>
+      <a href="#grade-5"><span class="num g5">五</span><span class="lens">永續・公民參與</span><span class="loc">逢甲夜市</span></a>
+      <a href="#grade-6"><span class="num g6">六</span><span class="lens">證據・變遷・創生</span><span class="loc">西屯老街</span></a>
+    </div>
+  </section>
+
+  <!-- ============ GRADES ============ -->
+  <section id="grades">
+    <div class="sec-head">
+      <svg class="blob" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="14" fill="#17CE92" stroke="#111" stroke-width="2.5"/></svg>
+      <h2>各年級走讀課程</h2>
+    </div>
+    <p class="sec-sub">切換視角：老師看課程設計與提問層次，學生看探索任務與思考問題。</p>
+
+    <div class="toggle" role="group" aria-label="切換瀏覽視角">
+      <button type="button" id="btn-teacher" class="active"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3.5" width="18" height="12" rx="1.5"/><path d="M7 7.5h7M7 11h4"/><path d="M12 15.5v2.5M8 21l4-3 4 3"/></svg> 老師視角</button>
+      <button type="button" id="btn-student"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 學生視角</button>
+    </div>
+
+    <!-- ===== G1 ===== -->
+    <article class="grade g1" id="grade-1">
+      <div class="grade-top">
+        <span class="badge">一年級</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 校園</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 6 節</span>
+        <span class="badge status-draft">通則草稿・待共構</span>
+      </div>
+      <h3>走讀西屯：發現校園裡的故事</h3>
+      <p class="meta t-only">領域：生活｜設計者：張百蕙</p>
+      <div class="grade-grid">
+        <div>
+          <div class="panel">
+            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <div class="lens-chips"><span>故事</span><span>歸屬</span></div>
+            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <p><span class="gen">一個地方的物件承載著故事與記憶，認識它們讓我們產生歸屬感。</span></p>
+            <p class="gen-note t-only">＊草稿提煉自教案設計理念，待教師社群共構定稿。</p>
+          </div>
+          <div class="mission s-only">
+            <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
+            <p>當一位「西屯小記者」！找到校園裡四位會說話的朋友——百年樹人紀念碑、孔子像、老樹、動物石像——聽聽它們想告訴你什麼故事，再走進校史室搭時光機，看看以前的西屯國小。</p>
+          </div>
+        </div>
+        <div>
+          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="timeline">
+              <li><span class="n">1</span><span><b>校園有故事</b>：繪本《開學了，學校也好緊張！》，想像「如果學校會說話」。</span></li>
+              <li><span class="n">2</span><span><b>西屯小記者尋寶趣</b>：實地走訪四站地標，完成尋寶學習單。</span></li>
+              <li><span class="n">3</span><span><b>走進校史室</b>：老照片、老物件，比較校園的「以前」與「現在」。</span></li>
+              <li><span class="n">5</span><span><b>西屯國小明信片</b>：畫下我最喜歡的西屯角落，寫給未來的朋友。</span></li>
+            </ul>
+          </details>
+          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="qs">
+              <li><span class="qtag">事實</span><span>校園裡有哪些有故事的地方？它們在哪裡？</span></li>
+              <li><span class="qtag">概念</span><span>如果老樹會說話，它看過什麼？為什麼這些物件留了下來？</span></li>
+              <li><span class="qtag">延伸</span><span>我可以為這個陪伴大家長大的校園做什麼？</span></li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </article>
+
+    <!-- ===== G2 ===== -->
+    <article class="grade g2" id="grade-2">
+      <div class="grade-top">
+        <span class="badge">二年級</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 烈美堂</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 4 節</span>
+        <span class="badge status-draft">通則草稿・待共構</span>
+      </div>
+      <h3>守護的溫度：從烈美堂到我的家</h3>
+      <p class="meta t-only">領域：生活／社會｜設計者：葉璦嘉</p>
+      <div class="grade-grid">
+        <div>
+          <div class="panel">
+            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <div class="lens-chips"><span>守護</span><span>責任</span></div>
+            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <p><span class="gen">家因為有人持續地守護與付出而存在，每個人都能成為守護者。</span></p>
+            <p class="gen-note t-only">＊草稿提煉自家庭教育議題融入內涵，待教師社群共構定稿。</p>
+          </div>
+          <div class="mission s-only">
+            <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
+            <p>跟著老二媽的故事，走進兩百歲的烈美堂，找找紅磚、燕尾和堂號。回家後，找出家裡的「守護神」，做一張愛的守護卡，然後接棒——完成三項守護家的小行動！</p>
+          </div>
+        </div>
+        <div>
+          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="timeline">
+              <li><span class="n">1</span><span><b>老二媽的掛念</b>：繪本《萬和宮老二媽的故事》，理解「家」是情感連結的起點。</span></li>
+              <li><span class="n">2</span><span><b>實地走讀烈美堂</b>：觀察紅磚、燕尾、堂號，思考是誰守護了兩百年。</span></li>
+              <li><span class="n">3</span><span><b>愛的守護卡</b>：找出家中的守護神，繪製卡片並寫下感謝。</span></li>
+              <li><span class="n">4</span><span><b>守護者行動卡</b>：環境、安全、心情三類守護任務，許下約定帶回家實踐。</span></li>
+            </ul>
+          </details>
+          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="qs">
+              <li><span class="qtag">事實</span><span>烈美堂有哪些古厝的特徵？它幾歲了？</span></li>
+              <li><span class="qtag">概念</span><span>這棟房子兩百歲還這麼整齊，是誰在「守護」它？</span></li>
+              <li><span class="qtag">延伸</span><span>在我的家裡，誰是守護神？我可以怎麼接棒？</span></li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </article>
+
+    <!-- ===== G3 ===== -->
+    <article class="grade g3" id="grade-3">
+      <div class="grade-top">
+        <span class="badge">三年級</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 西屯市場（街仔尾）</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 6 節</span>
+        <span class="badge status-draft">通則草稿・待共構</span>
+      </div>
+      <h3>西屯市場時光收集卡</h3>
+      <p class="meta t-only">領域：校本課程—西屯走讀｜設計者：胡桓睿｜社群計畫概念導向重構範例</p>
+      <div class="grade-grid">
+        <div>
+          <div class="panel">
+            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <div class="lens-chips"><span>變遷</span><span>延續</span><span>連結</span></div>
+            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <p><span class="gen">隨著時代的變遷，傳統市場透過人情味與職人精神，延續在地文化，也連結了人與人的情感。</span></p>
+            <p class="gen-note t-only">＊第六節搭建鷹架，引導孩子用自己的話歸納表達。重構不更動六節架構，只調整每節的「提問」與「收束」。</p>
+          </div>
+          <div class="mission s-only">
+            <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
+            <p>幫西屯市場做一套「時光收集卡」！三人一組認領一個攤位，用「一店三畫風」畫下你看見的市場，錄下老闆的故事做成 QR Code，最後策劃一場市場時光走廊展覽，把卡牌送回市場。</p>
+          </div>
+        </div>
+        <div>
+          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="timeline">
+              <li><span class="n">1</span><span><b>時光機</b>：概念提問開場——「市場和超市，差別只在賣的東西嗎？」</span></li>
+              <li><span class="n">2</span><span><b>踏查（上）</b>：收集概念證據，訪談加入「您最捨不得這裡的什麼？」</span></li>
+              <li><span class="n">3</span><span><b>踏查（下）</b>：五感 Bingo＋ORID 統整，從「我看到」走到「這對我的意義」。</span></li>
+              <li><span class="n">4</span><span><b>繪製（上）</b>：三畫風＝三種觀點，「為什麼我們看的不一樣？」</span></li>
+              <li><span class="n">5</span><span><b>繪製（下）</b>：職人語錄＋QR Code，卡牌成為「為市場說話」的媒介。</span></li>
+              <li><span class="n">6</span><span><b>策展發表</b>：通則歸納時刻，卡牌回饋市場完成遷移。</span></li>
+            </ul>
+          </details>
+          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="qs">
+              <li><span class="qtag">事實</span><span>西屯市場在哪裡？這家攤位賣什麼、有什麼特色？</span></li>
+              <li><span class="qtag">概念</span><span>同一家店，三個人的描繪有什麼不同？人與人的連結如何讓一個地方變得特別？</span></li>
+              <li><span class="qtag">延伸</span><span>如果有一天傳統市場消失了，我們會失去什麼？</span></li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </article>
+
+    <!-- ===== G4 ===== -->
+    <article class="grade g4" id="grade-4">
+      <div class="grade-top">
+        <span class="badge">四年級</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 八角穀倉</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 5 節</span>
+        <span class="badge status-draft">通則草稿・待共構</span>
+      </div>
+      <h3>西屯時光機：點亮八角穀倉</h3>
+      <p class="meta t-only">領域：社會／藝術｜設計者：楊舜如｜採 4F 引導法（Facts／Feelings／Findings／Future）</p>
+      <div class="grade-grid">
+        <div>
+          <div class="panel">
+            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <div class="lens-chips"><span>結構</span><span>價值</span><span>活化</span></div>
+            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <p><span class="gen">老建築蘊含先人的智慧，賦予新生命能讓文化價值延續到未來。</span></p>
+            <p class="gen-note t-only">＊草稿提煉自「老屋活化」價值思辨環節，待教師社群共構定稿。</p>
+          </div>
+          <div class="mission s-only">
+            <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
+            <p>當一位小小建築師！踏查八角穀倉，找出它的幾何秘密，用牙籤和黏土搭出八角形結構，想像「穀倉爺爺」的新模樣，最後彩繪組裝一座屬於你的八角穀倉立體模型。</p>
+          </div>
+        </div>
+        <div>
+          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="timeline">
+              <li><span class="n">1</span><span><b>尋找八角形狀</b>（Facts）：實地踏查，觀察八角柱外觀、材質與二戰痕跡。</span></li>
+              <li><span class="n">2</span><span><b>情感連結</b>（Feelings）：鳥瞰圖繪製，寫下對「穀倉爺爺」的一句話。</span></li>
+              <li><span class="n">3</span><span><b>建築師的秘密</b>（Findings）：牙籤黏土八角結構實驗＋老屋活化價值思辨。</span></li>
+              <li><span class="n">4</span><span><b>點亮未來（上）</b>（Future）：設計自己的八角穀倉新樣貌。</span></li>
+              <li><span class="n">5</span><span><b>點亮未來（下）</b>：立體彩繪模型組裝、發表，回家邀請家人散步介紹。</span></li>
+            </ul>
+          </details>
+          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="qs">
+              <li><span class="qtag">事實</span><span>八角穀倉長什麼樣子？以前是用來做什麼的？</span></li>
+              <li><span class="qtag">概念</span><span>為什麼要蓋成八角形？老建築被保留下來的價值是什麼？</span></li>
+              <li><span class="qtag">延伸</span><span>如果由你來活化，八角穀倉的下一個一百年會是什麼模樣？</span></li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </article>
+
+    <!-- ===== G5 ===== -->
+    <article class="grade g5" id="grade-5">
+      <div class="grade-top">
+        <span class="badge">五年級</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 逢甲夜市</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 8 節</span>
+        <span class="badge status-draft">通則草稿・待共構</span>
+      </div>
+      <h3>逢甲夜市走讀課程</h3>
+      <p class="meta t-only">領域：彈性課程（校訂）｜設計者：盧耿逸｜前四節觀察記錄、後四節永續提案</p>
+      <div class="grade-grid">
+        <div>
+          <div class="panel">
+            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <div class="lens-chips"><span>永續</span><span>公民參與</span></div>
+            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <p><span class="gen">地方的繁榮需要兼顧環境與經濟，每個人都能為社區的永續提出行動。</span></p>
+            <p class="gen-note t-only">＊草稿提煉自環境面與經濟面學習表現，本年級最需在工作坊中與老師共構。</p>
+          </div>
+          <div class="mission s-only">
+            <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
+            <p>白天走進逢甲夜市，用照片和文字記錄你的觀察。找出夜市可能遇到的問題——垃圾、人潮、特色不見了？和小組一起做一份「逢甲夜市改進計畫」簡報，向大家提出你的點子！</p>
+          </div>
+        </div>
+        <div>
+          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="timeline">
+              <li><span class="n">1</span><span><b>臺灣夜市文化</b>：認識夜市的文化與經濟意義（簡報＋小測驗）。</span></li>
+              <li><span class="n">2</span><span><b>認識逢甲夜市</b>：歷史與重要性，建立觀察焦點。</span></li>
+              <li><span class="n">5</span><span><b>實地參訪</b>（兩節）：規劃路線走訪夜市，觀察環境、攤位特色與美食文化。</span></li>
+              <li><span class="n">7</span><span><b>改進計畫</b>：從永續角度盤點環境與經濟問題，撰寫觀察與建議。</span></li>
+              <li><span class="n">8</span><span><b>成果發表</b>：分組簡報「改進計畫與特色營造」，互相回饋。</span></li>
+            </ul>
+          </details>
+          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="qs">
+              <li><span class="qtag">事實</span><span>逢甲夜市有什麼特色？它對西屯有多重要？</span></li>
+              <li><span class="qtag">概念</span><span>熱鬧的背後，環境與經濟之間有什麼拉扯？</span></li>
+              <li><span class="qtag">延伸</span><span>要讓夜市再熱鬧五十年，我們可以提出什麼行動？</span></li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </article>
+
+    <!-- ===== G6 ===== -->
+    <article class="grade g6" id="grade-6">
+      <div class="grade-top">
+        <span class="badge">六年級</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg> 西屯老街</span>
+        <span class="badge ghost"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2.5"/></svg> 共 8 節</span>
+        <span class="badge status-draft">通則草稿・待共構</span>
+      </div>
+      <h3>老街秘密研究社：西屯創生偵探隊</h3>
+      <p class="meta t-only">領域：校本課程（社會）｜設計者：林郁軒｜方法論：鷹眼觀察（Fact／Reflective）＋羅盤思考</p>
+      <div class="grade-grid">
+        <div>
+          <div class="panel">
+            <h4><span class="tag">透鏡</span>概念透鏡</h4>
+            <div class="lens-chips"><span>證據</span><span>變遷</span><span>創生</span></div>
+            <h4><span class="tag">通則</span>帶得走的理解</h4>
+            <p><span class="gen">透過證據與探究理解地方的變遷，我們能為土地的未來提出可行的主張。</span></p>
+            <p class="gen-note t-only">＊草稿以「探究方法」與「地方創生」雙線提煉，待教師社群共構定稿。</p>
+          </div>
+          <div class="mission s-only">
+            <h4><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 8.5h11a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2h-11a2 2 0 0 1-2-2v-8.5a2 2 0 0 1 2-2z"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M7.5 13.5h9v4h-9z"/></svg> 我的任務</h4>
+            <p>收到一封來自西屯老街的神秘委託信！組成創生偵探隊，自己規劃路線、用鷹眼觀察蒐集證據、訪談店家或廟方，最後提出一份「地方創生推廣提案」，在校園美展向大家發表。</p>
+          </div>
+        </div>
+        <div>
+          <details class="panel t-only fold"><summary><span class="tag">節次</span>課程活動流程<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="timeline">
+              <li><span class="n">1</span><span><b>神秘委託信</b>：成立偵探隊、分配職務、示範鷹眼觀察法。</span></li>
+              <li><span class="n">2</span><span><b>探究準備</b>：Google Map 規劃路線與觀察點，圈選候選深挖點。</span></li>
+              <li><span class="n">3</span><span><b>放大鏡大作戰</b>：實地踏查蒐證，收集亮點與痛點線索。</span></li>
+              <li><span class="n">4</span><span><b>線索追追追</b>：用 5W1H 定稿核心問題與預測答案。</span></li>
+              <li><span class="n">5</span><span><b>小記者訓練營</b>：訪談大綱定稿、追問句型練習與倫理提醒。</span></li>
+              <li><span class="n">6</span><span><b>訪談蒐證</b>：帶回三句關鍵證據，對照預測答案修正。</span></li>
+              <li><span class="n">7</span><span><b>羅盤思考</b>：證據鏈→E-W-N-S 羅盤→創生提案初稿。</span></li>
+              <li><span class="n">8</span><span><b>提案發表會</b>：數位提案包＋兩分鐘 Pitch，票選最想支持的方案。</span></li>
+            </ul>
+          </details>
+          <details class="panel fold"><summary><span class="tag">提問</span>三層引導問題<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+            <ul class="qs">
+              <li><span class="qtag">事實</span><span>老街的今昔有什麼改變？我看見了哪些具體線索？</span></li>
+              <li><span class="qtag">概念</span><span>什麼樣的證據才能支持一個說得通的主張？</span></li>
+              <li><span class="qtag">延伸</span><span>我們的提案，能為老街的未來帶來什麼真實的改變？</span></li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </article>
+  </section>
+</main>
 
 <footer>
-  教案內容整理自基金會現有走讀教案文件；地圖座標依地點地址概略定位，建議帶班走讀前以 Google 地圖核對實際位置與路線。
+  <p class="belief">Belief Creates　相信，就能創造</p>
+  <p>西屯國小 × 立賢教育基金會｜See &amp; Turn 校本走讀課程｜115 學年度</p>
 </footer>
 
 <script>
-/* ============================================================
-   資料區：之後只要替換這份資料，網站結構不需更動
-   每個年級包含：
-   - center / zoom：地圖初始位置
-   - route：走讀路線上的地點（含座標、介紹）
-   - plan：教案內容（主題、目標、流程、學習單）
-   ============================================================ */
-const GRADES = [
-  {
-    id: "g1",
-    label: "一年級",
-    theme: "認識校園周邊",
-    center: [24.1822, 120.6448],
-    zoom: 17,
-    plan: {
-      subject: "走讀西屯：發現校園裡的故事（共6節課）",
-      goals: [
-        "認識校園中的重要地標與特色角落，了解西屯國小的歷史與故事",
-        "依指示完成校園走讀、觀察記錄與創作，並能口語表達自己喜歡的角落",
-        "對西屯校園產生熟悉感與歸屬感，願意實踐愛護校園的行動"
-      ],
-      flow: [
-        "第一節｜校園有故事：繪本導讀，認識西屯國小的「生日」與代表性物件",
-        "第二節｜西屯小記者尋寶趣：走訪孔子像、百年樹人紀念碑、老樹、動物石像",
-        "第三節｜走進校史室：透過老照片比較今昔校園樣貌",
-        "第四節｜我最喜歡的西屯角落：分享喜愛的角落，發想想送給學校的新設計",
-        "第五節｜我是西屯小守護員：設計送給西屯國小的明信片正面",
-        "第六節｜寄給未來的西屯小朋友：寫下祝福並投入班級小郵筒"
-      ],
-      worksheet: "西屯小記者尋寶單、時光提問卡、西屯國小明信片"
-    },
-    route: [
-      { name: "孔子像", lat: 24.1823, lng: 120.6449, desc: "校園裡安靜的「老師」，提醒學生認真學習、尊敬師長、懂得禮貌。" },
-      { name: "動物石像", lat: 24.1821, lng: 120.6447, desc: "陪伴一代代學生玩耍、留下回憶的可愛角落，也提醒大家注意安全。" },
-      { name: "百年樹人紀念碑", lat: 24.1822, lng: 120.6450, desc: "像一本站立的故事書，紀念西屯國小走過的悠久歷史。" },
-      { name: "老樹", lat: 24.1824, lng: 120.6446, desc: "校園裡溫柔的長輩，看著一屆又一屆的孩子在樹蔭下長大。" },
-      { name: "校史室", lat: 24.1822, lng: 120.6448, desc: "收藏老照片與老物件的時光寶庫，帶學生看見學校過去的樣貌。" }
-    ],
-    locationNote: "走讀地點皆位於西屯國小校園內（台中市西屯區西屯路二段300號），座標為校園範圍內的概略位置，可依實際地標再校正。"
-  },
-  {
-    id: "g2",
-    label: "二年級",
-    theme: "古厝建築與家庭守護",
-    center: [24.1779, 120.6398],
-    zoom: 16,
-    plan: {
-      subject: "守護的溫度：從烈美堂到我的家",
-      goals: [
-        "透過《萬和宮老二媽的故事》繪本，理解「家」是情感連結的起點",
-        "實地走讀烈美堂，觀察並描述古厝建築特徵（如紅磚、燕尾、堂號）",
-        "覺察家人對自己的照顧（守護神），並具體執行家庭守護任務、表達感謝"
-      ],
-      flow: [
-        "第一節｜認識「家」與守護的意義：繪本導讀，引出「守護神」的概念",
-        "第二節｜走讀烈美堂：實地觀察兩百年古厝的紅磚、燕尾、堂號等特徵",
-        "第三節｜從古厝到我家：尋找並記錄家中默默守護自己的人",
-        "第四節｜接棒守護者：完成「愛的守護卡」，承諾執行家庭守護任務"
-      ],
-      worksheet: "烈美堂建築觀察單、愛的感謝卡"
-    },
-    route: [
-      { name: "烈美堂", lat: 24.1779, lng: 120.6398, desc: "已逾兩百年歷史的張廖家族祖厝，臺中市歷史建築，可觀察紅磚、燕尾脊與堂號等傳統建築特徵。地址：台中市西屯區烈美街62巷19號。" }
-    ],
-    locationNote: "座標依「烈美街62巷19號」概略定位，建議走讀前以 Google 地圖核對實際巷弄位置與集合動線。"
-  },
-  {
-    id: "g3",
-    label: "三年級",
-    theme: "傳統市場與社區生活",
-    center: [24.1828, 120.6458],
-    zoom: 16,
-    plan: {
-      subject: "西屯市場時光收集卡",
-      goals: [
-        "認識西屯市場（街仔尾）的發展歷史、地理空間方位與攤商職人特色",
-        "打開五感進行環境觀察，並對攤商進行有禮貌的訪談、錄製語音並轉成 QR Code",
-        "運用「寫實、特寫、印象」三種視角，將踏查的細節與感受轉化為繪畫作品並上台導覽"
-      ],
-      flow: [
-        "市場初探：認識街仔尾的歷史、方位與市場地圖",
-        "五感踏查：觀察攤位、訪談攤商並完成紀錄",
-        "數位紀錄：錄製訪談語音、製作專屬 QR Code",
-        "一店三畫風：以寫實、特寫、印象三種視角創作攤商畫作",
-        "成果發表會：口頭導覽創作理念，分享攤商的故事"
-      ],
-      worksheet: "市場踏查地圖、攤商訪談紀錄卡、一店三畫風創作學習單"
-    },
-    route: [
-      { name: "西屯市場（街仔尾）", lat: 24.1828, lng: 120.6458, desc: "西屯老聚落「街仔尾」所在地，現為居民日常採買的傳統市場，約有60個攤位。地址：台中市西屯區西屯路二段329號。" }
-    ],
-    locationNote: "座標依「西屯路二段329號」概略定位，市場內動線與重點攤位建議走讀前實地確認後再標註。"
-  },
-  {
-    id: "g4",
-    label: "四年級",
-    theme: "老建築的保存與創新",
-    center: [24.1800, 120.6425],
-    zoom: 15,
-    plan: {
-      subject: "西屯時光機：點亮八角穀倉／老二媽的家：守護西屯烈美堂",
-      goals: [
-        "辨識八角穀倉的幾何特徵與原始功能，說出八角形結構在建築上的科學巧思與保存價值",
-        "探討「建築新舊」與「歷史價值」的關係，理解烈美堂登錄為歷史建築的特殊性",
-        "區分烈美堂改建前（傳統合院、馬背）與改建後（RC結構、仿歇山頂）的特徵",
-        "結合紅磚燕尾、大漁池水紋等元素，動手創作立體模型與意象燈具"
-      ],
-      flow: [
-        "第一節｜建築年齡的大謎題：認識老建築的身世與「事實」線索",
-        "第二節｜不變的靈魂：探討烈美堂的保存價值與「感受」",
-        "第三節｜新與舊的變身術：比較烈美堂改建前後的建築特徵與「發現」",
-        "結構智慧與文化價值：認識八角穀倉的幾何結構與保存意義",
-        "動手創作：製作八角穀倉立體模型、紅磚燕尾與水紋意象燈具"
-      ],
-      worksheet: "八角穀倉學習單、烈美堂學習單"
-    },
-    route: [
-      { name: "八角穀倉", lat: 24.1819, lng: 120.6452, desc: "1967年由台灣省糧食局補助臺中市農會興建的稻種倉庫，八角形結構為臺中市歷史建築。地址：台中市西屯區西屯路二段307號。" },
-      { name: "烈美堂", lat: 24.1779, lng: 120.6398, desc: "張廖家族祖厝，可比較其改建前後的建築樣貌變化，認識歷史建築保存的意義。地址：台中市西屯區烈美街62巷19號。" }
-    ],
-    locationNote: "兩處座標分別依「西屯路二段307號」「烈美街62巷19號」概略定位，建議走讀前再以 Google 地圖核對精確位置。"
-  },
-  {
-    id: "g5",
-    label: "五年級",
-    theme: "商圈文化與行銷企劃",
-    center: [24.1809, 120.6457],
-    zoom: 16,
-    plan: {
-      subject: "逢甲夜市走讀課程（共8節課）",
-      goals: [
-        "認識台灣夜市文化與逢甲夜市的發展歷史、商圈分區",
-        "實地走讀逢甲商圈，完成觀察與訪談學習單，了解店家經營與顧客樣貌",
-        "分析商圈現況的優勢與待改進之處，提出特色營造與行銷企劃構想"
-      ],
-      flow: [
-        "第一節｜認識台灣夜市文化：從鼎邊趖等小吃認識夜市飲食特色",
-        "第二節｜逢甲夜市的歷史與商圈分區：認識發展脈絡與分區地圖",
-        "第三節｜延伸學習：以綠島旅遊計畫練習行程規劃的方法",
-        "第四節｜走讀前準備：擬定踏查路線與觀察重點",
-        "第五、六節｜實地走讀逢甲商圈：踏查、紀錄與店家訪談",
-        "第七節｜夜市新風貌：發想商圈改進與特色營造計畫",
-        "第八節｜成果統整與發表：分享走讀收穫與行銷企劃構想"
-      ],
-      worksheet: "逢甲夜市走讀學習單、改進計畫與特色營造學習單"
-    },
-    route: [
-      { name: "逢甲夜市／逢甲商圈", lat: 24.1809, lng: 120.6457, desc: "台中知名觀光夜市與商圈，可實地觀察店家經營型態、人潮動線與商圈分區特色。集中於文華路、逢甲路一帶。" }
-    ],
-    locationNote: "座標為逢甲商圈概略中心點，實際走讀路線建議依「逢甲商圈分區圖」「逢甲商圈參訪區域圖」（教案附件）再行細部標註。"
-  },
-  {
-    id: "g6",
-    label: "六年級",
-    theme: "地方創生與行動方案",
-    center: [24.1845, 120.6415],
-    zoom: 16,
-    plan: {
-      subject: "老街秘密研究社：西屯創生偵探隊",
-      goals: [
-        "運用「鷹眼」觀察法（事實／反思）辨識西屯老街的亮點與痛點",
-        "利用數位工具（Google 地圖／雲端文件）合作規劃踏查路線並紀錄",
-        "設計具邏輯性的訪談大綱，從中擷取具代表性的證據",
-        "結合踏查與訪談證據，運用「羅盤思考法」產出具可行性的地方創生提案"
-      ],
-      flow: [
-        "偵探隊集合：認識西屯老街（西大墩、街仔頭／街仔尾）的歷史脈絡",
-        "鷹眼踏查：分組記錄老街的亮點與痛點，標註於地圖",
-        "訪談行動：設計訪談大綱，採集居民與店家的故事與證據",
-        "羅盤思考：彙整踏查與訪談證據，討論並產出創生提案",
-        "成果發表：向班級或社區報告偵探隊的發現與行動建議"
-      ],
-      worksheet: "踏查路線紀錄表、訪談大綱與證據蒐集表、地方創生提案企劃書"
-    },
-    route: [
-      { name: "西屯老街（西大墩聚落）", lat: 24.1845, lng: 120.6415, desc: "張廖姓宗親早期聚落「西大墩」，西安里一帶仍保有「街仔頭」「街仔尾」等舊地名與生活紋理，是觀察老街變遷與發想創生提案的重要場域。" }
-    ],
-    locationNote: "座標依西安里、光明路一帶概略定位，建議走讀前先請學生以「鷹眼觀察法」實地確認踏查路線與重點站點。"
+  // view toggle
+  const btnT=document.getElementById('btn-teacher');
+  const btnS=document.getElementById('btn-student');
+  function setMode(m){
+    document.body.classList.toggle('mode-teacher',m==='t');
+    document.body.classList.toggle('mode-student',m==='s');
+    btnT.classList.toggle('active',m==='t');
+    btnS.classList.toggle('active',m==='s');
   }
-];
+  btnT.addEventListener('click',()=>setMode('t'));
+  btnS.addEventListener('click',()=>setMode('s'));
 
-const tabsEl = document.getElementById("gradeTabs");
-const panelsEl = document.getElementById("gradePanels");
-const mapInstances = {};
-
-GRADES.forEach((grade, idx) => {
-  // 分頁按鈕
-  const btn = document.createElement("button");
-  btn.textContent = grade.label;
-  btn.dataset.target = grade.id;
-  if (idx === 0) btn.classList.add("active");
-  btn.addEventListener("click", () => switchGrade(grade.id));
-  tabsEl.appendChild(btn);
-
-  // 內容面板
-  const panel = document.createElement("div");
-  panel.className = "grade-panel" + (idx === 0 ? " active" : "");
-  panel.id = grade.id;
-  panel.innerHTML = `
-    <div class="placeholder-note">本年級主題：「${grade.theme}」。內容整理自基金會現有教案文件；地圖座標為依地址概略定位，正式使用前建議再以 Google 地圖核對精確位置。${grade.locationNote ? "　" + grade.locationNote : ""}</div>
-
-    <section class="block">
-      <h2>走讀路線地圖 <span class="tag">${grade.label}</span></h2>
-      <div id="map-${grade.id}" style="height:360px;border-radius:10px;border:1px solid var(--border);"></div>
-      <p class="map-note">點擊圖釘可查看地點簡介；座標為依地址概略定位，正式帶班走讀前請再實地核對路線。</p>
-    </section>
-
-    <section class="block">
-      <h2>教案文件 <span class="tag">${grade.label}</span></h2>
-      <div class="plan-grid">
-        <div class="plan-card">
-          <h3>單元主題</h3>
-          <p>${grade.plan.subject}</p>
-        </div>
-        <div class="plan-card">
-          <h3>教學目標</h3>
-          <ul>${grade.plan.goals.map(g => `<li>${g}</li>`).join("")}</ul>
-        </div>
-        <div class="plan-card">
-          <h3>教學流程</h3>
-          <ul>${grade.plan.flow.map(f => `<li>${f}</li>`).join("")}</ul>
-        </div>
-        <div class="plan-card">
-          <h3>學習單</h3>
-          <p>${grade.plan.worksheet}</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="block">
-      <h2>走讀地點介紹 <span class="tag">${grade.label}</span></h2>
-      <div class="spot-grid">
-        ${grade.route.map(spot => `
-          <div class="spot-card">
-            <div class="spot-img">${spot.name}</div>
-            <div class="spot-body">
-              <h3>${spot.name}</h3>
-              <p>${spot.desc}</p>
-              <div class="meta">座標：${spot.lat.toFixed(4)}, ${spot.lng.toFixed(4)}</div>
-            </div>
-          </div>
-        `).join("")}
-      </div>
-    </section>
-  `;
-  panelsEl.appendChild(panel);
-});
-
-function switchGrade(id) {
-  document.querySelectorAll(".grade-tabs button").forEach(b => {
-    b.classList.toggle("active", b.dataset.target === id);
+  // ripple nodes -> scroll
+  document.querySelectorAll('.node').forEach(n=>{
+    const go=()=>{const el=document.getElementById(n.dataset.target);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});};
+    n.addEventListener('click',go);
+    n.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});
   });
-  document.querySelectorAll(".grade-panel").forEach(p => {
-    p.classList.toggle("active", p.id === id);
-  });
-  // 確保地圖在顯示時正確渲染尺寸
-  const grade = GRADES.find(g => g.id === id);
-  if (grade) initMap(grade);
-  setTimeout(() => {
-    if (mapInstances[id]) mapInstances[id].invalidateSize();
-  }, 80);
-}
-
-function initMap(grade) {
-  if (mapInstances[grade.id]) return;
-  const map = L.map(`map-${grade.id}`).setView(grade.center, grade.zoom);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap 貢獻者'
-  }).addTo(map);
-
-  grade.route.forEach((spot, i) => {
-    L.marker([spot.lat, spot.lng]).addTo(map)
-      .bindPopup(`<strong>${i + 1}. ${spot.name}</strong><br>${spot.desc}`);
-  });
-
-  // 以折線示意走讀路線
-  L.polyline(grade.route.map(s => [s.lat, s.lng]), { color: "#2f6f4f", weight: 3, dashArray: "6 6" }).addTo(map);
-
-  mapInstances[grade.id] = map;
-}
-
-// 初始化第一個年級的地圖
-initMap(GRADES[0]);
 </script>
-
 </body>
 </html>
